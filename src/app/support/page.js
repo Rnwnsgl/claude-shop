@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import Pagination from '@/components/common/Pagination';
+import { allReviews } from '@/constants/reviews';
 import {
   Bell,
   HelpCircle,
@@ -13,11 +15,11 @@ import {
   ChevronRight,
   Search,
   Calendar,
-  User,
   Package,
   CreditCard,
   RotateCcw,
-  ShieldCheck
+  ShieldCheck,
+  Star
 } from 'lucide-react';
 
 export default function SupportPage() {
@@ -591,78 +593,59 @@ function InquiryTab() {
 
 // 포토리뷰 탭
 function ReviewTab() {
-  const reviews = [
-    {
-      id: 1,
-      product: '프리미엄 전자담배 스타터 키트',
-      author: '김**',
-      rating: 5,
-      date: '2025.01.14',
-      content: '배송도 빠르고 제품도 정말 만족스럽습니다. 처음 사용하는데 사용법도 간단해서 좋아요!',
-      image: true,
-    },
-    {
-      id: 2,
-      product: '망고 액상 30ml',
-      author: '이**',
-      rating: 5,
-      date: '2025.01.13',
-      content: '맛이 정말 좋네요. 계속 재구매 중입니다.',
-      image: true,
-    },
-    {
-      id: 3,
-      product: '멘솔 액상 60ml',
-      author: '박**',
-      rating: 4,
-      date: '2025.01.12',
-      content: '시원한 맛이 일품입니다. 여름에 더 좋을 것 같아요.',
-      image: true,
-    },
-  ];
+  // 상위 3개만 표시
+  const topReviews = allReviews.slice(0, 3);
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-900">포토리뷰</h2>
         <p className="text-sm text-gray-600">
-          총 <span className="font-bold text-blue-600">328</span>개의 리뷰
+          총 <span className="font-bold text-blue-600">{allReviews.length}</span>개의 리뷰
         </p>
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {reviews.map((review) => (
+        {topReviews.map((review) => (
           <div
             key={review.id}
             className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
           >
-            <div className="bg-gray-200 aspect-square flex items-center justify-center">
-              <Camera className="w-16 h-16 text-gray-400" />
+            <div className="bg-gray-100 aspect-square flex items-center justify-center">
+              {review.image ? (
+                <div className="w-full h-full flex items-center justify-center text-gray-400">
+                  <Star className="w-12 h-12 fill-yellow-400 text-yellow-400" />
+                </div>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-400">
+                  <div className="text-center">
+                    <Star className="w-12 h-12 mx-auto mb-2 fill-yellow-400 text-yellow-400" />
+                    <p className="text-sm">포토 리뷰</p>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="p-4">
               <div className="flex items-center mb-2">
                 {[...Array(5)].map((_, i) => (
-                  <span
+                  <Star
                     key={i}
-                    className={`text-lg ${
-                      i < review.rating ? 'text-yellow-400' : 'text-gray-300'
+                    className={`w-4 h-4 ${
+                      i < review.rating
+                        ? 'fill-yellow-400 text-yellow-400'
+                        : 'text-gray-300'
                     }`}
-                  >
-                    ★
-                  </span>
+                  />
                 ))}
               </div>
-              <p className="text-sm text-gray-900 font-medium mb-2">
+              <p className="text-sm text-gray-900 font-semibold mb-1 line-clamp-1">
                 {review.product}
               </p>
               <p className="text-sm text-gray-600 line-clamp-2 mb-3">
                 {review.content}
               </p>
               <div className="flex items-center justify-between text-xs text-gray-500">
-                <div className="flex items-center">
-                  <User className="w-3 h-3 mr-1" />
-                  <span>{review.author}</span>
-                </div>
+                <span>{review.author}</span>
                 <span>{review.date}</span>
               </div>
             </div>
@@ -671,9 +654,12 @@ function ReviewTab() {
       </div>
 
       <div className="flex justify-center mt-8">
-        <button className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+        <Link
+          href="/reviews"
+          className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+        >
           더보기
-        </button>
+        </Link>
       </div>
     </div>
   );
