@@ -32,3 +32,12 @@ export {
   toggleWishlistAtom,
   clearWishlistAtom,
 } from './wishlistAtom';
+
+// 검색 관련 atoms
+export {
+  recentSearchesAtom,
+  addRecentSearchAtom,
+  removeRecentSearchAtom,
+  clearRecentSearchesAtom,
+  recommendedKeywords,
+} from './searchAtom';

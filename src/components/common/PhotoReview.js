@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { Star } from 'lucide-react';
 
 // 임시 포토리뷰 데이터
@@ -114,9 +115,11 @@ export default function PhotoReview() {
 
         {/* 더보기 버튼 */}
         <div className="text-center mt-8">
-          <button className="px-8 py-3 border-2 border-gray-300 rounded-lg hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-colors font-semibold">
-            리뷰 더보기
-          </button>
+          <Link href="/reviews">
+            <button className="px-8 py-3 border-2 border-gray-300 rounded-lg hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-colors font-semibold">
+              리뷰 더보기
+            </button>
+          </Link>
         </div>
       </div>
     </section>

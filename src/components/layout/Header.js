@@ -1,15 +1,71 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { useAtomValue } from 'jotai';
+import { useRouter } from 'next/navigation';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { ShoppingCart, Heart, User, Menu, Search } from 'lucide-react';
-import { cartCountAtom, wishlistCountAtom, isLoggedInAtom } from '@/store';
+import {
+  cartCountAtom,
+  wishlistCountAtom,
+  isLoggedInAtom,
+  addRecentSearchAtom,
+} from '@/store';
 import { cn } from '@/lib/utils';
+import SearchDropdown from '@/components/common/SearchDropdown';
 
 export default function Header() {
+  const router = useRouter();
   const cartCount = useAtomValue(cartCountAtom);
   const wishlistCount = useAtomValue(wishlistCountAtom);
   const isLoggedIn = useAtomValue(isLoggedInAtom);
+  const addRecentSearch = useSetAtom(addRecentSearchAtom);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const searchRef = useRef(null);
+  const mobileSearchRef = useRef(null);
+
+  // 검색 실행 함수
+  const executeSearch = (query) => {
+    if (query.trim()) {
+      addRecentSearch(query.trim());
+      router.push(`/products?search=${encodeURIComponent(query.trim())}`);
+      setSearchQuery('');
+      setShowDropdown(false);
+    }
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    executeSearch(searchQuery);
+  };
+
+  const handleSearchClick = () => {
+    executeSearch(searchQuery);
+  };
+
+  const handleSelectKeyword = (keyword) => {
+    executeSearch(keyword);
+  };
+
+  // 외부 클릭 감지
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target) &&
+        mobileSearchRef.current &&
+        !mobileSearchRef.current.contains(event.target)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white">
@@ -29,17 +85,25 @@ export default function Header() {
           </Link>
 
           {/* 검색바 (데스크탑) */}
-          <div className="hidden md:flex flex-1 max-w-lg mx-8">
-            <div className="relative w-full">
+          <div className="hidden md:flex flex-1 max-w-lg mx-8" ref={searchRef}>
+            <form onSubmit={handleSearch} className="relative w-full">
               <input
                 type="text"
                 placeholder="상품을 검색하세요"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setShowDropdown(true)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
               />
-              <button className="absolute right-2 top-1/2 -translate-y-1/2">
+              <button
+                type="button"
+                onClick={handleSearchClick}
+                className="absolute right-2 top-1/2 -translate-y-1/2 hover:text-gray-600 transition-colors"
+              >
                 <Search className="w-5 h-5 text-gray-400" />
               </button>
-            </div>
+              {showDropdown && <SearchDropdown onSelectKeyword={handleSelectKeyword} />}
+            </form>
           </div>
 
           {/* 우측 아이콘 메뉴 */}
@@ -88,6 +152,18 @@ export default function Header() {
         {/* 네비게이션 메뉴 */}
         <nav className="hidden md:flex items-center space-x-8 py-4 border-t">
           <Link
+            href="/products?category=sale"
+            className="text-sm font-medium text-red-500 hover:text-red-600 transition-colors"
+          >
+            할인상품
+          </Link>
+          <Link
+            href="/products"
+            className="text-sm font-medium text-blue-500 hover:text-blue-600 transition-colors"
+          >
+            전체상품
+          </Link>
+          <Link
             href="/products?category=liquid"
             className="text-sm font-medium hover:text-gray-600 transition-colors"
           >
@@ -112,26 +188,34 @@ export default function Header() {
             액세서리
           </Link>
           <Link
-            href="/products?category=sale"
-            className="text-sm font-medium text-red-500 hover:text-red-600 transition-colors"
+            href="/support"
+            className="text-sm font-medium hover:text-gray-600 transition-colors"
           >
-            할인상품
+            고객 지원
           </Link>
         </nav>
       </div>
 
       {/* 모바일 검색바 */}
-      <div className="md:hidden px-4 pb-4">
-        <div className="relative w-full">
+      <div className="md:hidden px-4 pb-4" ref={mobileSearchRef}>
+        <form onSubmit={handleSearch} className="relative w-full">
           <input
             type="text"
             placeholder="상품을 검색하세요"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setShowDropdown(true)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
           />
-          <button className="absolute right-2 top-1/2 -translate-y-1/2">
+          <button
+            type="button"
+            onClick={handleSearchClick}
+            className="absolute right-2 top-1/2 -translate-y-1/2 hover:text-gray-600 transition-colors"
+          >
             <Search className="w-5 h-5 text-gray-400" />
           </button>
-        </div>
+          {showDropdown && <SearchDropdown onSelectKeyword={handleSelectKeyword} />}
+        </form>
       </div>
     </header>
   );

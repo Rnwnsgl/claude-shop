@@ -23,7 +23,7 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* 고객센터 */}
+          {/* 고객 지원 */}
           <div>
             <h4 className="text-white font-semibold mb-4">고객센터</h4>
             <p className="text-2xl font-bold text-white mb-2">
@@ -37,33 +37,38 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* 쇼핑 안내 */}
+          {/* 고객 지원 */}
           <div>
-            <h4 className="text-white font-semibold mb-4">쇼핑 안내</h4>
+            <h4 className="text-white font-semibold mb-4">고객 지원</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/guide/order" className="hover:text-white">
-                  주문/배송 안내
+                <Link href="/support?tab=notice" className="hover:text-white">
+                  공지사항
                 </Link>
               </li>
               <li>
-                <Link href="/guide/payment" className="hover:text-white">
-                  결제 안내
-                </Link>
-              </li>
-              <li>
-                <Link href="/guide/return" className="hover:text-white">
-                  반품/교환 안내
-                </Link>
-              </li>
-              <li>
-                <Link href="/guide/adult" className="hover:text-white">
-                  성인인증 안내
-                </Link>
-              </li>
-              <li>
-                <Link href="/faq" className="hover:text-white">
+                <Link href="/support?tab=faq" className="hover:text-white">
                   자주 묻는 질문
+                </Link>
+              </li>
+              <li>
+                <Link href="/support?tab=inquiry" className="hover:text-white">
+                  1:1 문의
+                </Link>
+              </li>
+              <li>
+                <Link href="/support?tab=review" className="hover:text-white">
+                  포토리뷰
+                </Link>
+              </li>
+              <li>
+                <Link href="/support?tab=event" className="hover:text-white">
+                  이벤트
+                </Link>
+              </li>
+              <li>
+                <Link href="/support?tab=guide" className="hover:text-white">
+                  이용안내
                 </Link>
               </li>
             </ul>

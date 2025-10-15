@@ -6,6 +6,7 @@ import { Heart, ShoppingCart } from 'lucide-react';
 import { useSetAtom, useAtomValue } from 'jotai';
 import { addToCartAtom, toggleWishlistAtom, wishlistAtom } from '@/store';
 import { formatPrice } from '@/lib/utils';
+import { CATEGORY_NAMES } from '@/constants/products';
 
 export default function ProductCard({ product }) {
   const addToCart = useSetAtom(addToCartAtom);
@@ -40,7 +41,7 @@ export default function ProductCard({ product }) {
 
   return (
     <Link href={`/products/${product.id}`}>
-      <div className="group bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
+      <div className="group bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
         {/* 상품 이미지 */}
         <div className="relative aspect-square bg-gray-100 overflow-hidden">
           {product.image ? (
@@ -78,13 +79,15 @@ export default function ProductCard({ product }) {
         </div>
 
         {/* 상품 정보 */}
-        <div className="p-4">
-          <p className="text-sm text-gray-500 mb-1">{product.category}</p>
-          <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
+        <div className="p-4 flex flex-col flex-grow">
+          <p className="text-sm text-gray-500 mb-1">
+            {CATEGORY_NAMES[product.category] || product.category}
+          </p>
+          <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors min-h-[3rem]">
             {product.name}
           </h3>
 
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-3 min-h-[3.5rem]">
             <div>
               {product.discount ? (
                 <>
@@ -106,7 +109,7 @@ export default function ProductCard({ product }) {
           {/* 장바구니 버튼 */}
           <button
             onClick={handleAddToCart}
-            className="w-full bg-black text-white py-2 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-800 transition-colors"
+            className="w-full bg-black text-white py-2 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-800 transition-colors mt-auto"
           >
             <ShoppingCart className="w-4 h-4" />
             <span>장바구니</span>
