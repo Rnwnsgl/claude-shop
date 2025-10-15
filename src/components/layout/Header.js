@@ -150,7 +150,7 @@ export default function Header() {
         </div>
 
         {/* 네비게이션 메뉴 */}
-        <nav className="hidden md:flex items-center space-x-8 py-4 border-t">
+        <nav className="hidden md:flex items-center space-x-8 py-4">
           <Link
             href="/products?category=sale"
             className="text-sm font-medium text-red-500 hover:text-red-600 transition-colors"
